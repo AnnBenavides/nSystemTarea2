@@ -1,6 +1,7 @@
+#include "fifoqueues.h" // para nExchange
 #include "nSysimp.h"
 #include "nSystem.h"
-#include "fifoqueues.h" // para nExchange
+
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
