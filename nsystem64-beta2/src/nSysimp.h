@@ -1,4 +1,5 @@
 #include <signal.h>
+#include "fifoqueues.h"
 
 /*************************************************************
  * nProcess.c
@@ -66,7 +67,7 @@ void ProcessEnd();
  * Para el Scheduler:
  */
 
-extern struct Queue *ready_queue;   /* Cola de tareas en espera de la CPU */
+extern struct FifoQueue *ready_queue;   /* Cola de tareas en espera de la CPU */
 extern nTask current_task;  /* La tarea que tiene la CPU */
 extern int current_slice;   /* Taman~o de una tajada de CPU */
 
