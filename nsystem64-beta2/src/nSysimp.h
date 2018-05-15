@@ -1,3 +1,4 @@
+#include "fifoqueues.h"
 #include <signal.h>
 
 /*************************************************************
@@ -22,7 +23,7 @@ typedef struct Task /* Descriptor de una tarea */
   struct Task *wait_task;   /* La tarea que espera un nExitTask */
 
   /* Para nSend, nReceive y nReply */
-  struct Queue *send_queue; /* cola de emisores en espera de esta tarea */
+  struct FifoQueue *send_queue; /* cola de emisores en espera de esta tarea */
   union { void *msg; int rc; } send; /* sirve para intercambio de info */
   int wake_time;            /* Tiempo maximo de espera de un nReceive */
 }
@@ -66,7 +67,7 @@ void ProcessEnd();
  * Para el Scheduler:
  */
 
-extern struct Queue *ready_queue;   /* Cola de tareas en espera de la CPU */
+extern struct FifoQueue *ready_queue;   /* Cola de tareas en espera de la CPU */
 extern nTask current_task;  /* La tarea que tiene la CPU */
 extern int current_slice;   /* Taman~o de una tajada de CPU */
 
