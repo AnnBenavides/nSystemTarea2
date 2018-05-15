@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "../src/fifoqueues.h" //para nExchange
+
 
 /*
  * Aqui se definen los prototipos de las operaciones basicas de
