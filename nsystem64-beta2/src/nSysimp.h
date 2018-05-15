@@ -1,4 +1,4 @@
-#include "fifoqueues.h" // para nExchange
+#include "fifoqueues.h" //para nExchange
 #include <signal.h>
 
 /*************************************************************
@@ -28,7 +28,7 @@ typedef struct Task /* Descriptor de una tarea */
   int wake_time;            /* Tiempo maximo de espera de un nReceive */
 
   /* para nExchange (t, msg, timeout) */
-  struct FifoQueue ready_fifo; // fifoqueue de tasks
+  struct FifoQueue *ready_fifo; // fifoqueue de tasks
   void *ex_msg; // msg 
   struct Task *ex_task; // t
   int ex_waiting; // TRUE si esta bloqueado
