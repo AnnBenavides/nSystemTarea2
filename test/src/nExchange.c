@@ -14,7 +14,7 @@ t1 -> nExchange(t2,m1,dt1)
 #include "nSysimp.h"
 #include "nSystem.h"
 
-void * nExchange(nTask task, void *msg, int timeout){
+void* nExchange(nTask task, void *msg, int timeout){
 
  	START_CRITICAL();
  	{

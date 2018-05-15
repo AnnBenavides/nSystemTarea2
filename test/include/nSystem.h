@@ -1,5 +1,6 @@
 #ifndef _NSYSTEM_H_
 #define _NSYSTEM_H_
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -82,7 +83,11 @@ void nReply(nTask task, int rc);  /* Responde un mensaje */
 void nSleep(int delay);           /* Suspende el proceso por delay milisecs */
 int nGetTime(); /* Entre la hora en milisegundos y modulo ``maxint'' */
 
-void * nExchange(nTask task, void *msg, int timeout); // para nExchange
+/*************************************************************
+ * nExchange
+ *************************************************************/
+
+void* nExchange(nTask task, void *msg, int timeout);
 
 /*************************************************************
  * Semaforos
