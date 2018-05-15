@@ -1,5 +1,4 @@
 #include "nSystem.h"
-#include "nExchange.h"
 
 /* Importante: cuando su programa no funcione y de un error fatal,
  * use ddd (o gdb) poniendo un breakpoint en nFatalError.
