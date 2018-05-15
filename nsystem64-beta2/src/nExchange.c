@@ -14,28 +14,28 @@ t1 -> nExchange(t2,m1,dt1)
 #include "nSysimp.h"
 #include "nSystem.h"
 
-void * nExchange(nTask t, void *msg, int timeout){
+void * nExchange(nTask task, void *msg, int timeout){
 
  	START_CRITICAL();
  	{
  		nTask this_task= current_task;
  		// completamos la estructura task con t y msg 
- 		this_task->ex_task = t;
+ 		this_task->ex_task = task;
  		this_task->ex_msg = msg;
-	 	if (t->ex_task == this_task && (t->status == WAIT_EXCHANGE || t->status == WAIT_EXCHANGE_TIMEOUT)){
+	 	if (task->ex_task == this_task && (task->status == WAIT_EXCHANGE || task->status == WAIT_EXCHANGE_TIMEOUT)){
 	 		// caso 1.a. t estaba esperando este nExchange, las desbloqueo
 	 		if (this_task->ex_waiting){
-	 			t->ex_waiting = FALSE;
+	 			task->ex_waiting = FALSE;
 	 			this_task->ex_waiting = FALSE;
 	 		}
-	 		if (t->status == WAIT_EXCHANGE_TIMEOUT)
+	 		if (task->status == WAIT_EXCHANGE_TIMEOUT)
 	 			CancelTask(t);
-	 		t->status= READY;
-      		PushTask(ready_queue, t); /* En primer lugar en la cola */
+	 		task->status= READY;
+      		PushTask(ready_queue, task); /* En primer lugar en la cola */
       		/* En nExchange se coloca ``t'' en la cola de tareas fifo */
-	    	PutObj(t->ready_fifo, t);
+	    	PutObj(t->ready_fifo, task);
 	    	END_CRITICAL();
-	    	return t->ex_msg;
+	    	return task->ex_msg;
 		} else {
 			// se llama a nExchange por primera vez
 			// programar timeout y bloqueo
@@ -46,18 +46,18 @@ void * nExchange(nTask t, void *msg, int timeout){
 				/* La tarea se despertara automaticamente despues de timeout */		
 			} else 
 				this_task->status= WAIT_EXCHANGE; /* La tarea espera indefinidamente */
-			PutObj(t->ready_fifo, t); 
+			PutObj(task->ready_fifo, task); 
 			ResumeNextReadyTask(); /* Se suspende indefinidamente hasta un nExchange correspondiente */
 		}
 
-		if (t->ex_waiting){
+		if (task->ex_waiting){
 			END_CRITICAL();
 			return NULL;
 		}
 
-		nTask send_task= GetObj(t->ready_fifo); // ultimo task de la cola
+		nTask send_task= GetObj(task->ready_fifo); // ultimo task de la cola
 		// casos de retorno
-	    if (t!=NULL) t = send_task; 
+	    if (task!=NULL) task = send_task; 
 	    msg= send_task==NULL ? NULL : send_task->ex_msg;
 	    END_CRITICAL();
 	    return msg;
