@@ -1,10 +1,10 @@
 #ifndef _NSYSTEM_H_
 #define _NSYSTEM_H_
-
+#include "../src/fifoqueues.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "../src/fifoqueues.h"
+
 /*
  * Aqui se definen los prototipos de las operaciones basicas de
  * nSystem.  Los identificadores de proceso corresponden al
