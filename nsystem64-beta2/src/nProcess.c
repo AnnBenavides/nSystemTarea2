@@ -1,6 +1,5 @@
 #include "nSysimp.h"
 #include "nSystem.h"
-#include "fifoqueues.h"
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
@@ -14,7 +13,7 @@ static void VtimerHandler();
  * El prologo y el epilogo
  *************************************************************/
 
-FifoQueue ready_queue;                /* Las tareas ready */
+Queue ready_queue;                /* Las tareas ready */
 nTask current_task;               /* La tarea running */
 
 int cpu_status=RUNNING;           /* Estado del procesador */
@@ -27,7 +26,7 @@ static int rq_n=0;
 
 void ProcessInit()
 {
-  ready_queue= MakeFifoQueue();
+  ready_queue= MakeQueue();
   main_task= current_task= MakeTask(0);
     /* el nMain usa el stack del proceso Unix */
   nSetTaskName("nMain");
@@ -41,11 +40,11 @@ void ProcessEnd()
     nFprintf(2, "Largo promedio de la cola ``ready'': %f\n",
                 rq_sum_length/rq_n);
 
-  if ( ! EmptyFifoQueue(ready_queue) )
+  if ( ! EmptyQueue(ready_queue) )
     nFprintf(2, "\nTareas que quedaron ``ready'':\n");
 
-  while ( ! EmptyFifoQueue(ready_queue) )
-    DescribeTask(GetObj(ready_queue));
+  while ( ! EmptyQueue(ready_queue) )
+    DescribeTask(GetTask(ready_queue));
 }
 
 nTask nCurrentTask()
@@ -62,7 +61,7 @@ int nGetQueueLength()
 {
   int len;
   START_CRITICAL();
-    len= LengthFifoQueue(ready_queue);
+    len= QueueLength(ready_queue);
   END_CRITICAL();
   return len;
 }
@@ -129,7 +128,7 @@ void ResumeNextReadyTask()
   nTask next_task;
   nTask this_task;
 
-  while (EmptyFifoQueue(ready_queue))
+  while (EmptyQueue(ready_queue))
   {
     /* No hay tareas "ready".  Todas las tareas estan en alguna cola
      * esperando algun evento.  Los unicos eventos externos que
@@ -150,7 +149,7 @@ void ResumeNextReadyTask()
   }
 
   /* Ahora si' hay tareas ready */
-  next_task= GetObj(ready_queue);
+  next_task= GetTask(ready_queue);
   this_task= current_task;
 
   /* Debugging: Se chequea la integridad de los stacks */
@@ -220,7 +219,7 @@ void PreemptTask()
   if (cpu_status==RUNNING && current_slice!=0)
   {
     context_changes++;
-    PushObj(ready_queue, current_task);
+    PushTask(ready_queue, current_task);
 } }
 
 /*
@@ -256,14 +255,14 @@ static void VtimerHandler()
    */
   SetAlarm(VIRTUALTIMER, current_slice, VtimerHandler);
 
-  rq_sum_length += LengthFifoQueue(ready_queue);
+  rq_sum_length += QueueLength(ready_queue);
   rq_n++;
 
   if (cpu_status==RUNNING)
   {
     context_changes++; /* solo para saber cuantos cambios implicitos hubo */
 
-    PutObj(ready_queue, current_task); /* Al final de la ``ready_queue'' */
+    PutTask(ready_queue, current_task); /* Al final de la ``ready_queue'' */
     ResumeNextReadyTask(); /* Este procedimiento retorna cuando a esta */
                              /* tarea le toque una nueva tajada de tiempo  */
   }
@@ -317,7 +316,7 @@ nTask nEmitTask( int (*proc)(), ... )
     info.proc= proc;
 
     /* La tarea actual la colocamos primera en la "ready_queue" */
-    PushObj(ready_queue, this_task);
+    PushTask(ready_queue, this_task);
 
     /***** EL CAMBIO DE CONTEXTO ********/
 
@@ -428,7 +427,7 @@ void nExitTask(int rc)
     if (current_task->wait_task!=NULL)
     {
       current_task->wait_task->status= READY;
-      PushObj(ready_queue, current_task->wait_task);
+      PushTask(ready_queue, current_task->wait_task);
     }
 
     current_task->status=ZOMBIE; /* Consultado por nWaitTask */
