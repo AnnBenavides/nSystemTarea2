@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include "fifoqueues.h" // para nExchange
 
 /*
  * Aqui se definen los prototipos de las operaciones basicas de
@@ -82,6 +83,8 @@ void nReply(nTask task, int rc);  /* Responde un mensaje */
 
 void nSleep(int delay);           /* Suspende el proceso por delay milisecs */
 int nGetTime(); /* Entre la hora en milisegundos y modulo ``maxint'' */
+
+void* nExchange(nTask t, void *msg, int timeout); // para nExchange
 
 /*************************************************************
  * Semaforos
