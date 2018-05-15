@@ -29,7 +29,7 @@ void * nExchange(nTask task, void *msg, int timeout){
 	 			this_task->ex_waiting = FALSE;
 	 		}
 	 		if (task->status == WAIT_EXCHANGE_TIMEOUT)
-	 			CancelTask(t);
+	 			CancelTask(task);
 	 		task->status= READY;
       		PushTask(ready_queue, task); /* En primer lugar en la cola */
       		/* En nExchange se coloca ``t'' en la cola de tareas fifo */
