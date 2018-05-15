@@ -32,8 +32,8 @@ void * nExchange(nTask task, void *msg, int timeout){
 	 			CancelTask(task);
 	 		task->status= READY;
       		PushTask(ready_queue, task); /* En primer lugar en la cola */
-      		/* En nExchange se coloca ``t'' en la cola de tareas fifo */
-	    	PutObj(t->ready_fifo, task);
+      		/* En nExchange se coloca ``task'' en la cola de tareas fifo */
+	    	PutObj(task->ready_fifo, task);
 	    	END_CRITICAL();
 	    	return task->ex_msg;
 		} else {
