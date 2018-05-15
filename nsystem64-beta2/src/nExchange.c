@@ -12,37 +12,35 @@ t1 -> nExchange(t2,m1,dt1)
 **/
 
 #include "nSysimp.h"
-#include "nSystem.h"
 #include "fifoqueues.h"
+#include <stdio.h>
 
 void * nExchange(nTask t, void *msg, int timeout){
- 	void *send_msg; //mensage a retornar
-  	nTask send_task;
+
  	START_CRITICAL();
  	{
  		nTask this_task= current_task;
-	 	if (timeout != -1  && (t->status == WAIT_SEND || t->status == WAIT_SEND_TIMEOUT)){
-	 		//esperamos el nExchange de t hacia nosotros
-	 		// o timeout
-	 		if (t->status == WAIT_SEND_TIMEOUT)
+ 		// completamos la estructura task con t y msg 
+ 		this_task->ex_task = t;
+ 		this_task->ex_msg = msg;
+	 	if (t->status == WAIT_EXHANGE || t->status == WAIT_EXCHANGE_TIMEOUT){
+	 		// t estaba esperando este nExchange, las desbloqueo
+	 		if (this_task->ex_waiting){
+	 			t->ex_waiting = FALSE;
+	 			this_task->ex_waiting = FALSE;
+	 		}
+	 		// si se supera el timeout
+	 		if (t->status == WAIT_EXCHANGE_TIMEOUT)
 	 			CancelTask(t);
-	 		// recibir mensaje del nExchange de t
-	 		send_task= GetObj(this_task->send_queue);
-	    	send_msg= send_task==NULL ? NULL : send_task->send.msg;
+	 		t->status= READY;
+      		PushTask(ready_queue, t); /* En primer lugar en la cola */
+      		/* En nReply se coloca ``this_task'' en la cola de tareas ready */
+	    	PutObj(t->ready_fifo, t);
+	    	END_CRITICAL();
+	    	return t->ex_msg;
+		} else {
+			// se llama a nExchange por primera vez
+
 		}
-		/* En nReply se coloca ``this_task'' en la cola de tareas ready */
-	    PutObj(task->send_queue, this_task);
-	    this_task->send.msg= msg;
-	    if (EmptyFifoQueue(this_task->send_queue) && timeout!=-1){
-	      if (timeout>-1){
-	        this_task->status= WAIT_SEND_TIMEOUT;
-	        ProgramTask(timeout);
-	        /* La tarea se despertara automaticamente despues de timeout */
-	      }
-	      else 
-	      	this_task->status= WAIT_SEND; /* La tarea espera indefinidamente */
-	      ResumeNextReadyTask(); /* Se suspende indefinidamente hasta un nExchange */
 	}
-	END_CRITICAL();
-	return send_msg;
 }
