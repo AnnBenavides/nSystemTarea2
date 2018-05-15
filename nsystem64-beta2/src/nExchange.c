@@ -23,7 +23,7 @@ void * nExchange(nTask t, void *msg, int timeout){
  		// completamos la estructura task con t y msg 
  		this_task->ex_task = t;
  		this_task->ex_msg = msg;
-	 	if (t->status == WAIT_EXHANGE || t->status == WAIT_EXCHANGE_TIMEOUT){
+	 	if (t->ex_task==this_task && (t->status == WAIT_EXHANGE || t->status == WAIT_EXCHANGE_TIMEOUT)){
 	 		// caso 1.a. t estaba esperando este nExchange, las desbloqueo
 	 		if (this_task->ex_waiting){
 	 			t->ex_waiting = FALSE;
