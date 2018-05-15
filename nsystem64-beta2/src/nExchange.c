@@ -34,13 +34,22 @@ void * nExchange(nTask t, void *msg, int timeout){
 	 			CancelTask(t);
 	 		t->status= READY;
       		PushTask(ready_queue, t); /* En primer lugar en la cola */
-      		/* En nReply se coloca ``this_task'' en la cola de tareas ready */
+      		/* En nExchange se coloca ``t'' en la cola de tareas fifo */
 	    	PutObj(t->ready_fifo, t);
 	    	END_CRITICAL();
 	    	return t->ex_msg;
 		} else {
 			// se llama a nExchange por primera vez
-
+			// programar timeout y bloqueo
+			if (timeout > 0){
+				this-task->ex_waiting = TRUE;
+				this_task->status = WAIT_EXCHANGE_TIMEOUT;
+				ProgramTask(timeout);
+				/* La tarea se despertara automaticamente despues de timeout */		
+			} else 
+				this_task->status= WAIT_EXCHANGE; /* La tarea espera indefinidamente */
+			PutObj(t->ready_fifo, t); 
+			ResumeNextReadyTask(); /* Se suspende indefinidamente hasta un nExchange correspondiente */
 		}
 	}
 }
