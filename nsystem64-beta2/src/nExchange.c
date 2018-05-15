@@ -12,9 +12,9 @@ t1 -> nExchange(t2,m1,dt1)
 **/
 
 #include "nSysimp.h"
-#include "fifoqueues.h"
+//#include "fifoqueues.h"
 #include "nExchange.h"
-#include <stdio.h>
+//#include <stdio.h>
 
 void * nExchange(nTask t, void *msg, int timeout){
 
