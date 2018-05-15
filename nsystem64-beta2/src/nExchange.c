@@ -24,12 +24,12 @@ void * nExchange(nTask t, void *msg, int timeout){
  		this_task->ex_task = t;
  		this_task->ex_msg = msg;
 	 	if (t->status == WAIT_EXHANGE || t->status == WAIT_EXCHANGE_TIMEOUT){
-	 		// t estaba esperando este nExchange, las desbloqueo
+	 		// caso 1.a. t estaba esperando este nExchange, las desbloqueo
 	 		if (this_task->ex_waiting){
 	 			t->ex_waiting = FALSE;
 	 			this_task->ex_waiting = FALSE;
 	 		}
-	 		// si se supera el timeout
+	 		// caso 2. si se supera el timeout
 	 		if (t->status == WAIT_EXCHANGE_TIMEOUT)
 	 			CancelTask(t);
 	 		t->status= READY;
@@ -52,8 +52,14 @@ void * nExchange(nTask t, void *msg, int timeout){
 			ResumeNextReadyTask(); /* Se suspende indefinidamente hasta un nExchange correspondiente */
 		}
 
-		nTask send_task= GetObj(t->ready_fifo);
-	    if (t!=NULL) *t= send_task;
+		if (t->ex_waiting){
+			END_CRITICAL();
+			return NULL;
+		}
+
+		nTask send_task= GetObj(t->ready_fifo); // ultimo task de la cola
+		// casos de retorno
+	    if (t!=NULL) *t= send_task; 
 	    msg= send_task==NULL ? NULL : send_task->ex_msg;
 	    END_CRITICAL();
 	    return msg;
