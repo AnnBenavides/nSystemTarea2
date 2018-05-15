@@ -1,4 +1,4 @@
-#include "fifoqueues.c" // para nExchange
+#include "fifoqueues.h" // para nExchange
 #include "nSysimp.h"
 #include "nSystem.h"
 
