@@ -1,1 +1,0 @@
-void * nExchange(nTask t, void *msg, int timeout);
