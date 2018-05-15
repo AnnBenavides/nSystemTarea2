@@ -1,7 +1,5 @@
-#include "fifoqueues.h" // para nExchange
 #include "nSysimp.h"
 #include "nSystem.h"
-
 
 #include <stdarg.h>
 #include <string.h>

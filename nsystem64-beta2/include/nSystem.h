@@ -4,7 +4,6 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-
 /*
  * Aqui se definen los prototipos de las operaciones basicas de
  * nSystem.  Los identificadores de proceso corresponden al
