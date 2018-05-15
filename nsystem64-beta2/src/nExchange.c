@@ -51,5 +51,11 @@ void * nExchange(nTask t, void *msg, int timeout){
 			PutObj(t->ready_fifo, t); 
 			ResumeNextReadyTask(); /* Se suspende indefinidamente hasta un nExchange correspondiente */
 		}
+
+		nTask send_task= GetObj(t->ready_fifo);
+	    if (t!=NULL) *t= send_task;
+	    msg= send_task==NULL ? NULL : send_task->ex_msg;
+	    END_CRITICAL();
+	    return msg;
 	}
 }
