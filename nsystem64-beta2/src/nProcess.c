@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
+#include "fifoqueues.h" // para nExchange
 
 static nTask MakeTask(int stack_size);
 
@@ -375,6 +376,11 @@ static nTask MakeTask(int stack_size)
   /* AMD64 requiere que la pila este alineada a 16 bytes */
   new_task->sp= (SP)( (long)new_task->sp & ~0xfL );
   new_task->queue= NULL;
+  /* para nExchange */
+  new_task->ready_fifo = MakeFifoQueue(); //cola de task
+  new_task->ex_msg = NULL; // msg
+  new_task->ex_task = NULL; // t
+  new_task->ex_waiting = FALSE; // no bloqueado
 
   return new_task;
 }
