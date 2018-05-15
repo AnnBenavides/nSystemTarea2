@@ -12,7 +12,7 @@ t1 -> nExchange(t2,m1,dt1)
 **/
 
 #include "nSysimp.h"
-#include "fifoqueues.h"
+#include "fifoqueues.c"
 #include "nExchange.h"
 #include <stdio.h>
 

@@ -1,4 +1,4 @@
-#include "fifoqueues.h" //para nExchange
+#include "fifoqueues.c" //para nExchange
 #include <signal.h>
 
 /*************************************************************
