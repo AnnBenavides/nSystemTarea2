@@ -12,6 +12,7 @@ t1 -> nExchange(t2,m1,dt1)
 **/
 
 #include "nSysimp.h"
+#include "nSystem.h"
 #include "fifoqueues.h"
 #include <stdio.h>
 
@@ -29,7 +30,6 @@ void * nExchange(nTask t, void *msg, int timeout){
 	 			t->ex_waiting = FALSE;
 	 			this_task->ex_waiting = FALSE;
 	 		}
-	 		// caso 2. si se supera el timeout
 	 		if (t->status == WAIT_EXCHANGE_TIMEOUT)
 	 			CancelTask(t);
 	 		t->status= READY;

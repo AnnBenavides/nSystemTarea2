@@ -1,6 +1,5 @@
 #ifndef _NSYSTEM_H_
 #define _NSYSTEM_H_
-#include "../src/fifoqueues.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

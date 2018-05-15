@@ -1,9 +1,10 @@
 #include "nSysimp.h"
 #include "nSystem.h"
+#include "fifoqueues.h" // para nExchange
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
-#include "fifoqueues.h" // para nExchange
+
 
 static nTask MakeTask(int stack_size);
 
