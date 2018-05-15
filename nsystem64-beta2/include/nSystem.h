@@ -82,7 +82,7 @@ void nReply(nTask task, int rc);  /* Responde un mensaje */
 void nSleep(int delay);           /* Suspende el proceso por delay milisecs */
 int nGetTime(); /* Entre la hora en milisegundos y modulo ``maxint'' */
 
-void* nExchange(nTask t, void *msg, int timeout); // para nExchange
+void * nExchange(nTask t, void *msg, int timeout); // para nExchange
 
 /*************************************************************
  * Semaforos
