@@ -27,13 +27,13 @@ void * nExchange(nTask t, void *msg, int timeout){
 	 		if (t->status == WAIT_SEND_TIMEOUT)
 	 			CancelTask(t);
 	 		// recibir mensaje del nExchange de t
-	 		send_task= GetTask(this_task->send_queue);
+	 		send_task= GetObj(this_task->send_queue);
 	    	send_msg= send_task==NULL ? NULL : send_task->send.msg;
 		}
 		/* En nReply se coloca ``this_task'' en la cola de tareas ready */
-	    PutTask(task->send_queue, this_task);
+	    PutObj(task->send_queue, this_task);
 	    this_task->send.msg= msg;
-	    if (EmptyQueue(this_task->send_queue) && timeout!=-1){
+	    if (EmptyFifoQueue(this_task->send_queue) && timeout!=-1){
 	      if (timeout>-1){
 	        this_task->status= WAIT_SEND_TIMEOUT;
 	        ProgramTask(timeout);
