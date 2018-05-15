@@ -25,6 +25,12 @@ typedef struct Task /* Descriptor de una tarea */
   struct Queue *send_queue; /* cola de emisores en espera de esta tarea */
   union { void *msg; int rc; } send; /* sirve para intercambio de info */
   int wake_time;            /* Tiempo maximo de espera de un nReceive */
+
+  /* para nExchange (t, msg, timeout) */
+  void *ex_msg; // msg 
+  struct Task *ex_task; // t
+  int ex_waiting; // TRUE si esta bloqueado
+  struct Fifoqueue ready_fifo; // fifoqueue de tasks
 }
   *nTask;
 
@@ -50,6 +56,9 @@ typedef struct Task /* Descriptor de una tarea */
 #define STATUS_END WAIT_SLEEP
 
 /* Agregar nuevos estados como STATUS_END+1, STATUS_END+2, ... */
+  /* para nExchange */
+#define WAIT_EXCHANGE STATUS_END+1 
+#define WAIT_EXCHANGE_TIMEOUT STATUS_END+2
 
 #define STATUS_LIST {"READY", "ZOMBIE", "WAIT_TASK", "WAIT_REPLY", \
                      "WAIT_SEND", "WAIT_SEND_TIMEOUT", "WAIT_READ", \
